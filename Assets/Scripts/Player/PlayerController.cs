@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
+
+    private Rigidbody2D _rigidBody;
 
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _jumpStrength = 7f;
@@ -12,12 +13,14 @@ public class PlayerController : MonoBehaviour
     private bool _isGrounded = false;
     private Vector2 _movement;
 
-    private Rigidbody2D _rigidBody;
+
+    private CinemachineImpulseSource _impulseSource;
 
     public void Awake() {
         if (Instance == null) { Instance = this; }
 
         _rigidBody = GetComponent<Rigidbody2D>();
+        _impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
     private void Update()
