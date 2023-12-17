@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     private Rigidbody2D _rigidBody;
     [SerializeField] private float _moveSpeed = 10f;
     [SerializeField] private int _damageAmount = 1;
+    private float _knockbackThrust = 20f;
 
     private Vector2 _fireDirection;
 
@@ -31,6 +32,11 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         Health health = other.gameObject.GetComponent<Health>();
         health?.TakeDamage(_damageAmount);
+
+        Knockback knockback = other.gameObject.GetComponent<Knockback>();
+        knockback?.GetKnockedBack(PlayerController.Instance.transform.position, _knockbackThrust);
+
+
         _gun.ReleaseFromPool(this);
     }
 }

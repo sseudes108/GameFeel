@@ -1,88 +1,138 @@
-using Cinemachine;
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
-
+    private Action OnJump;
+    
+    //Components
     private Rigidbody2D _rigidBody;
+    private Movement _movement;
 
-    [SerializeField] private float _moveSpeed = 5f;
+    //Input
+    private InputManager _inputs;
+    private FrameInput _frameInput;
+
+    //Move Vars
     [SerializeField] private float _jumpStrength = 7f;
+    private bool _canDoubleJump;
 
-    private bool _isGrounded = false;
-    private Vector2 _movement;
+    //Ground
+    [SerializeField] Transform _groundCheckPoint;
+    [SerializeField] LayerMask _groundLayer;
+    [SerializeField] Vector2 _groundCheckSize;
 
+    //Gravity
+    [SerializeField] private float  _extraGravity = 700f;
+    [SerializeField] private float _gravityDelay = 0.2f;
+    private float _timeInAir;
 
-    private CinemachineImpulseSource _impulseSource;
+    //Coyote
+    [SerializeField] private float _coyoteTime;
+    private float _coyoteCounter;
 
     public void Awake() {
         if (Instance == null) { Instance = this; }
 
         _rigidBody = GetComponent<Rigidbody2D>();
-        _impulseSource = GetComponent<CinemachineImpulseSource>();
+        _inputs = GetComponent<InputManager>();
+        _movement = GetComponent<Movement>();
     }
 
-    private void Update()
-    {
+    private void Update(){
         GatherInput();
-        Jump();
+        HandleJump();
+        Movement();
+        GravityDelay();
+        CoyoteTimer();
         HandleSpriteFlip();
     }
-
     private void FixedUpdate() {
-        Move();
+        ExtraGravity();
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            _isGrounded = true;
+    private void OnEnable() {
+        OnJump += ApplyJumpForce;
+    }
+
+    private void OnDisable() {
+        OnJump -= ApplyJumpForce;
+    }
+
+    private void GatherInput(){
+        _frameInput = _inputs.FrameInput;
+    }
+    
+    //Move
+    private void Movement(){
+        _movement.SetMoveDirection(_frameInput.Move.x);
+    }
+
+    //Ground
+    public bool CheckGround(){
+        Collider2D isGrounded = Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0f, _groundLayer);
+        return isGrounded;
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(_groundCheckPoint.position, _groundCheckSize);
+    }
+
+    //Jump
+    private void HandleJump(){
+        if(!_frameInput.Jump){return;};
+
+        if(_coyoteCounter <= _coyoteTime){
+            OnJump?.Invoke();
+        }else if(_canDoubleJump){
+            _timeInAir = 0;
+            _canDoubleJump = false;
+            _rigidBody.velocity = Vector2.zero;
+            OnJump?.Invoke();
+        }
+    }
+    
+    private void ApplyJumpForce(){
+        _rigidBody.AddForce(Vector2.up * _jumpStrength, ForceMode2D.Impulse);
+    }
+
+    private void CoyoteTimer(){
+        if(!CheckGround()){
+            _coyoteCounter += Time.deltaTime;
+        }else{
+            _coyoteCounter = 0;
         }
     }
 
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            _isGrounded = false;
+    //Extra Gravity
+    private void GravityDelay(){
+        if(!CheckGround()){
+            _timeInAir += Time.deltaTime;
+        }else{
+            _canDoubleJump = true;
+            _timeInAir = 0;
         }
     }
 
-    public bool IsFacingRight()
-    {
+    private void ExtraGravity(){
+        if(_timeInAir > _gravityDelay){
+            _rigidBody.AddForce(new Vector2(0, -_extraGravity * Time.deltaTime));
+        }
+    }
+
+    //Sprite
+    public bool IsFacingRight(){
         return transform.eulerAngles.y == 0;
     }
-
-    private void GatherInput()
-    {
-        float moveX = Input.GetAxis("Horizontal");
-        _movement = new Vector2(moveX * _moveSpeed, _rigidBody.velocity.y);
-    }
-
-    private void Move() {
-
-        _rigidBody.velocity = _movement;
-    }
-
-    private void Jump()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded) {
-            _rigidBody.AddForce(Vector2.up * _jumpStrength, ForceMode2D.Impulse);
-        }
-    }
-
-    private void HandleSpriteFlip()
-    {
+    private void HandleSpriteFlip(){
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (mousePosition.x < transform.position.x)
-        {
+        if (mousePosition.x < transform.position.x){
             transform.eulerAngles = new Vector3(0f, -180f, 0f);
         }
-        else
-        {
+        else{
             transform.eulerAngles = new Vector3(0f, 0f, 0f);
         }
     } 

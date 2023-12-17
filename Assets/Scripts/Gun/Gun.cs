@@ -11,16 +11,14 @@ public class Gun : MonoBehaviour
     private static readonly int FIRE = Animator.StringToHash("Fire");
     private CinemachineImpulseSource _impulseSource;
 
+    private ObjectPool<Bullet> _bulletPool;
     public Transform BulletSpawnPoint => _bulletSpawnPoint;
     [SerializeField] private Transform _bulletSpawnPoint;
     [SerializeField] private Bullet _bulletPrefab;
-    private Vector2 _mousePos;
-
     [SerializeField] private float _fireCD = 0.5f;
     private float _lastFireTime;
-
-    private ObjectPool<Bullet> _bulletPool;
-
+    private Vector2 _mousePos;
+    
     private void Awake() {
         _animator = GetComponent<Animator>();
         _impulseSource = GetComponent<CinemachineImpulseSource>();
