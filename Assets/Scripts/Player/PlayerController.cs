@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public bool IsGrounded => CheckGround();
+    public FrameInput FrameInput  => _frameInput;
+    
     public static PlayerController Instance;
-    private Action OnJump;
+    public static Action OnJump;
     
     //Components
     private Rigidbody2D _rigidBody;
@@ -32,7 +35,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _coyoteTime;
     private float _coyoteCounter;
 
-    public void Awake() {
+    private void Awake() {
         if (Instance == null) { Instance = this; }
 
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -48,6 +51,7 @@ public class PlayerController : MonoBehaviour
         CoyoteTimer();
         HandleSpriteFlip();
     }
+
     private void FixedUpdate() {
         ExtraGravity();
     }
@@ -70,7 +74,7 @@ public class PlayerController : MonoBehaviour
     }
 
     //Ground
-    public bool CheckGround(){
+    private bool CheckGround(){
         Collider2D isGrounded = Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0f, _groundLayer);
         return isGrounded;
     }
@@ -121,19 +125,15 @@ public class PlayerController : MonoBehaviour
             _rigidBody.AddForce(new Vector2(0, -_extraGravity * Time.deltaTime));
         }
     }
-
-    //Sprite
-    public bool IsFacingRight(){
-        return transform.eulerAngles.y == 0;
-    }
+    
     private void HandleSpriteFlip(){
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (mousePosition.x < transform.position.x){
-            transform.eulerAngles = new Vector3(0f, -180f, 0f);
+            transform.localScale = new Vector3(-1, 1, 1);
         }
         else{
-            transform.eulerAngles = new Vector3(0f, 0f, 0f);
+            transform.localScale = new Vector3(1, 1, 1);
         }
     } 
 }

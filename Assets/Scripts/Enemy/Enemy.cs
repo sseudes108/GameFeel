@@ -11,16 +11,22 @@ public class Enemy : MonoBehaviour
 
     private Rigidbody2D _rigidBody;
     private Movement _movement;
+    private ColorChanger _colorChanger;
 
     private void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _movement = GetComponent<Movement>();
+        _colorChanger = GetComponent<ColorChanger>();
     }
 
     private void Start() {
         StartCoroutine(ChangeDirection());
         StartCoroutine(RandomJump());
+    }
+
+    public void Init(Color color){
+        _colorChanger.SetDefaultColor(color);
     }
 
     private void Update()
@@ -30,14 +36,11 @@ public class Enemy : MonoBehaviour
 
     private void Movement(){
         _movement.SetMoveDirection(_currentDirection);
-        //Vector2 newVelocity = new(_currentDirection * _moveSpeed, _rigidBody.velocity.y);
-        //_rigidBody.velocity = newVelocity;
     }
 
     private IEnumerator ChangeDirection()
     {
-        while (true)
-        {
+        while (true){
             _currentDirection = UnityEngine.Random.Range(0, 2) * 2 - 1; // 1 or -1
             yield return new WaitForSeconds(_changeDirectionInterval);
         }

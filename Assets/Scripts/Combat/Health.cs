@@ -1,12 +1,23 @@
- using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] private int _startingHealth = 3;
+    public static Action<Health> OnDeath;
 
+    public GameObject DeathSplatterVFX => _deathSplatterVFX;
+    public GameObject DeathParticleVFX => _deathParticleVFX;
+    public ColorChanger ColorChanger => _colorChanger;
+
+    [SerializeField] private int _startingHealth = 3;
+    [SerializeField] private GameObject _deathSplatterVFX;
+    [SerializeField] private GameObject _deathParticleVFX;
     private int _currentHealth;
+    private  ColorChanger _colorChanger;
+
+    private void Awake() {
+        _colorChanger = GetComponent<ColorChanger>();
+    }
 
     private void Start() {
         ResetHealth();
@@ -20,6 +31,7 @@ public class Health : MonoBehaviour
         _currentHealth -= amount;
 
         if (_currentHealth <= 0) {
+            OnDeath?.Invoke(this);
             Destroy(gameObject);
         }
     }

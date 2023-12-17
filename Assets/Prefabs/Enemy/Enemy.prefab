@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 2931160403932860084}
   - component: {fileID: 7146486959201254459}
   - component: {fileID: -9006871900979931398}
+  - component: {fileID: -7277267824105000813}
+  - component: {fileID: -3570753552768484937}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -151,6 +153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startingHealth: 3
+  _deathSplatterVFX: {fileID: 5940895561595605100, guid: 2610485fdd4c73547a6c5e2aa85f1234, type: 3}
+  _deathParticleVFX: {fileID: 1270854913978971645, guid: edf1b1b0e1e28994580e586ccb60e56c, type: 3}
 --- !u!114 &7146486959201254459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,6 +181,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 3
+--- !u!114 &-7277267824105000813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500829499347730933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d356509d2e94944b121c9879a1c495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaulMaterial: {fileID: 2100000, guid: 4fbdd173750d96142ae4b9cafae7b0f9, type: 2}
+  _whiteMaterial: {fileID: 2100000, guid: 246a4ccf4ae34e34aa64fe4a0f16c846, type: 2}
+  _flashTime: 0.1
+--- !u!114 &-3570753552768484937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500829499347730933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e579d073bb7cde34d88b0e671075d79c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fillSpriteRenderer: {fileID: 7564454557696005338}
+  _colors: []
 --- !u!1 &5153281642299242202
 GameObject:
   m_ObjectHideFlags: 0
