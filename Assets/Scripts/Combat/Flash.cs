@@ -5,7 +5,7 @@ public class Flash : MonoBehaviour
 {
     [SerializeField] private Material _defaulMaterial, _whiteMaterial;
     [SerializeField] private float _flashTime = 0.1f;
-    private SpriteRenderer[] _spriteRenderers;
+    [SerializeField] private SpriteRenderer[] _spriteRenderers;
     private ColorChanger _colorChanger;
 
     private void Awake() {
@@ -20,12 +20,12 @@ public class Flash : MonoBehaviour
     private IEnumerator FlashRoutine(){
         foreach (SpriteRenderer spriteRenderer in _spriteRenderers){
             spriteRenderer.material = _whiteMaterial;
-            _colorChanger.SetColor(Color.white);
+            _colorChanger?.SetColor(Color.white);
 
             yield return new WaitForSeconds(_flashTime);
         }
         SetDefaultMaterial();
-        _colorChanger.SetColor(_colorChanger.DefaultColor);
+        _colorChanger?.SetColor(_colorChanger.DefaultColor);
     }
 
     private void SetDefaultMaterial(){

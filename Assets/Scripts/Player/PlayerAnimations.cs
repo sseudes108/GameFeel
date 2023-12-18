@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerAnimations : MonoBehaviour
 {
     private PlayerController _player;
+    private Rigidbody2D _rigibody;
 
     //VFX
     [SerializeField] private ParticleSystem _moveParticleVFX;
@@ -15,8 +16,12 @@ public class PlayerAnimations : MonoBehaviour
     [SerializeField] private float _tiltSpeed = 5f;
     [SerializeField] private float _cowboyHatTiltModifier = 2f;
 
+    [SerializeField] private float _yVelocityCheck = -20f;
+    private float _yVelocityBeforePhysicsUpdate;
+
     private void Awake() {
         _player = GetComponent<PlayerController>();
+        _rigibody = GetComponent<Rigidbody2D>();
     }
 
     private void OnEnable() {
@@ -29,6 +34,16 @@ public class PlayerAnimations : MonoBehaviour
     private void Update() {
         DetectMoveDust();
         ApplyTilt();
+    }
+
+    private void FixedUpdate() {
+        _yVelocityBeforePhysicsUpdate = _rigibody.velocity.y;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if(_yVelocityBeforePhysicsUpdate < _yVelocityCheck){
+            PlayPuffDustVFX();
+        }
     }
 
     private void PlayPuffDustVFX(){

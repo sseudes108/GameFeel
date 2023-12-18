@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -27,14 +26,12 @@ public class Bullet : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        Health health = other.gameObject.GetComponent<Health>();
-        health?.TakeDamage(_damageAmount);
 
-        Knockback knockback = other.gameObject.GetComponent<Knockback>();
-        knockback?.GetKnockedBack(PlayerController.Instance.transform.position, _knockbackThrust);
+        IHitable iHitable = other.GetComponent<IHitable>();
+        iHitable?.TakeHit();
 
-        Flash flash = other.gameObject.GetComponent<Flash>();
-        flash?.StartFlash();
+        IDamageable iDamageble = other.GetComponent<IDamageable>();
+        iDamageble?.TakeDamage(_damageAmount, _knockbackThrust);
 
         Instantiate(_bulletImpactVFX, transform.position, Quaternion.identity);
         

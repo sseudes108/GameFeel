@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -18,6 +19,10 @@ public class Gun : MonoBehaviour
     [SerializeField] private float _fireCD = 0.5f;
     private float _lastFireTime;
     private Vector2 _mousePos;
+
+    [SerializeField] private GameObject _muzzleFlash;
+    [SerializeField] private float _muzzleFlashTime;
+    private Coroutine _muzzeFlashRoutine;
     
     private void Awake() {
         _animator = GetComponent<Animator>();
@@ -34,11 +39,13 @@ public class Gun : MonoBehaviour
     private void OnEnable() {
         OnShot += ShootProjectile;
         OnShot += FireAnimation;
+        OnShot += MuzzleFlash;
     }
 
     private void OnDisable() {
         OnShot -= ShootProjectile;
         OnShot -= FireAnimation;
+        OnShot -= MuzzleFlash;
     }
 
     //Shot and Projectile
@@ -90,5 +97,19 @@ public class Gun : MonoBehaviour
 
     public void ReleaseFromPool(Bullet bullet){
         _bulletPool.Release(bullet);
+    }
+
+    //Muzzle Flash
+    private void MuzzleFlash(){
+        if(_muzzeFlashRoutine != null){
+            StopCoroutine(_muzzeFlashRoutine);
+        }
+        
+        _muzzeFlashRoutine = StartCoroutine(MuzzleFlashRoutine());
+    }
+    private IEnumerator MuzzleFlashRoutine(){
+        _muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(_muzzleFlashTime);
+        _muzzleFlash.SetActive(false);
     }
 }

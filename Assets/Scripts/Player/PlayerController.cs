@@ -93,7 +93,6 @@ public class PlayerController : MonoBehaviour
         }else if(_canDoubleJump){
             _timeInAir = 0;
             _canDoubleJump = false;
-            _rigidBody.velocity = Vector2.zero;
             OnJump?.Invoke();
         }
     }

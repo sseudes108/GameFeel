@@ -41,6 +41,9 @@ TagManager:
   - name: Backdrop
     uniqueID: 1357209415
     locked: 0
+  - name: NoLight
+    uniqueID: 2730385461
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
