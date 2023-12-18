@@ -6,14 +6,16 @@ using UnityEngine.Pool;
 
 public class Gun : MonoBehaviour
 {
-    private Action OnShot;
+    public Transform BulletSpawnPoint => _bulletSpawnPoint;
+
+    public static Action OnShot;
 
     private Animator _animator;
     private static readonly int FIRE = Animator.StringToHash("Fire");
     private CinemachineImpulseSource _impulseSource;
 
     private ObjectPool<Bullet> _bulletPool;
-    public Transform BulletSpawnPoint => _bulletSpawnPoint;
+    [SerializeField] private Transform _bulletPoolManagerTransform;
     [SerializeField] private Transform _bulletSpawnPoint;
     [SerializeField] private Bullet _bulletPrefab;
     [SerializeField] private float _fireCD = 0.5f;

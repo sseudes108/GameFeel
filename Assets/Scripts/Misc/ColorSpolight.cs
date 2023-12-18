@@ -37,22 +37,21 @@ public class ColorSpolight : MonoBehaviour
         _rotationSpeed = _defaulRotationSpeed;
     }
 
-    public void DimTheLight(float discoPatyTime){
+    public void SpotLightDiscoParty(float discoPatyTime){
         if(_dimLightsRoutine != null){
             StopCoroutine(_dimLightsRoutine);
+            _rotationSpeed = _defaulRotationSpeed;
         }
-        _dimLightsRoutine = StartCoroutine(DimTheLightsRoutine(discoPatyTime));
+        _dimLightsRoutine = StartCoroutine(DiscoPatyLightsRoutine(discoPatyTime));
     }
 
-    private IEnumerator DimTheLightsRoutine(float discoPatyTime){
-        Debug.Log(string.Format("Rotation speed at start: {0}", _defaulRotationSpeed));
-
+    private IEnumerator DiscoPatyLightsRoutine(float discoPatyTime){
+        
         _rotationSpeed += Random.Range(80, 160);
-        Debug.Log(string.Format("New rotation speed: {0}", _rotationSpeed));
-
+        
         yield return new WaitForSeconds(discoPatyTime);
 
         _rotationSpeed = _defaulRotationSpeed;
-        Debug.Log(string.Format("Rotation speed at end: {0}", _rotationSpeed));
+        _dimLightsRoutine = null;
     }
 }

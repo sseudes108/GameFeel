@@ -19,6 +19,7 @@ public class Bullet : MonoBehaviour
         _gun = gun;
         transform.position = bulletSpawnPosition;
         _fireDirection = (_mousePos - bulletSpawnPosition).normalized;
+        transform.SetParent(GeneralManager.Instance.BulletPoolManager);
     }
 
     private void FixedUpdate(){

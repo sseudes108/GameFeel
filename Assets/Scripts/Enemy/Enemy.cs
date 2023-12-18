@@ -34,6 +34,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void Init(Color color){
         _colorChanger.SetDefaultColor(color);
+        transform.SetParent(GeneralManager.Instance.EnemyManager);
     }
 
     private void Update()
