@@ -12,9 +12,8 @@ public class DiscoBallManager : MonoBehaviour
     private float _defaulGlobalIntensity;
     private Coroutine _globalLightRoutine;
 
-
     //Spot Lights
-    [SerializeField] private float _discoPatyTime = 2f;
+    [SerializeField] private float _discoPartyTime = 7f;
     private ColorSpolight[] _allSpotLights;
 
     private void Awake() {
@@ -36,7 +35,7 @@ public class DiscoBallManager : MonoBehaviour
         DiscoGlobalLight();
 
         foreach(ColorSpolight spolight in _allSpotLights){
-            spolight.SpotLightDiscoParty(_discoPatyTime);
+            spolight.SpotLightDiscoParty(_discoPartyTime);
         }
     }
 
@@ -50,7 +49,7 @@ public class DiscoBallManager : MonoBehaviour
     private IEnumerator GlobalLightResetRoutine(){
         _globalLight.intensity = _discoGlobalLightIntensity;
 
-        yield return new WaitForSeconds(_discoPatyTime);
+        yield return new WaitForSeconds(_discoPartyTime);
 
         _globalLight.intensity = _defaulGlobalIntensity;
 

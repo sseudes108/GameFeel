@@ -10,10 +10,8 @@ public class Knockback : MonoBehaviour
     private Vector3 _hitDirection;
     private float _knockbackThrust;
     private Rigidbody2D _rigidbody;
-    private ColorChanger _colorChanger;
     private void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _colorChanger = GetComponent<ColorChanger>();
     }
 
     private void OnEnable() {
