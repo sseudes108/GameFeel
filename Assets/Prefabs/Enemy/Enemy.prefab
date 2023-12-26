@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: -9006871900979931398}
   - component: {fileID: -7277267824105000813}
   - component: {fileID: -3570753552768484937}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,6 +196,7 @@ MonoBehaviour:
   _defaulMaterial: {fileID: 2100000, guid: 4fbdd173750d96142ae4b9cafae7b0f9, type: 2}
   _whiteMaterial: {fileID: 2100000, guid: 246a4ccf4ae34e34aa64fe4a0f16c846, type: 2}
   _flashTime: 0.1
+  _spriteRenderers: []
 --- !u!114 &-3570753552768484937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,7 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5406967454622742902}
   - component: {fileID: 7564454557696005338}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,7 +305,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8095572175099409459}
   - component: {fileID: 4821474146721011921}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Outline
   m_TagString: Untagged
   m_Icon: {fileID: 0}

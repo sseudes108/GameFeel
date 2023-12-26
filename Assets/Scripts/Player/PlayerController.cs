@@ -1,14 +1,13 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour{
+    public static PlayerController Instance;
+    public static Action OnJump, OnJetPack;
     public bool IsGrounded => CheckGround();
     public FrameInput FrameInput  => _frameInput;
-    
-    public static PlayerController Instance;
-    public static Action OnJump;
-    
+
     //Components
     private Rigidbody2D _rigidBody;
     private Movement _movement;
@@ -35,12 +34,27 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _coyoteTime;
     private float _coyoteCounter;
 
+    //Jetpack
+    [SerializeField] private float _jetpackTimer = 0.6f;
+    [SerializeField] private TrailRenderer _jetpackTrailRenderer;
+    [SerializeField] private float _jetPackStrength = 12f;
+    private Coroutine _jetpackCoroutine;
+
+#region Unity Methods
     private void Awake() {
         if (Instance == null) { Instance = this; }
 
         _rigidBody = GetComponent<Rigidbody2D>();
         _inputs = GetComponent<InputManager>();
         _movement = GetComponent<Movement>();
+    }
+    private void OnEnable() {
+        OnJump += ApplyJumpForce;
+        OnJetPack += StartJetpack;
+    }
+    private void OnDisable() {
+        OnJump -= ApplyJumpForce;
+        OnJetPack -= StartJetpack;
     }
 
     private void Update(){
@@ -50,30 +64,34 @@ public class PlayerController : MonoBehaviour
         GravityDelay();
         CoyoteTimer();
         HandleSpriteFlip();
+        Jetpack();
     }
 
     private void FixedUpdate() {
         ExtraGravity();
     }
-
-    private void OnEnable() {
-        OnJump += ApplyJumpForce;
-    }
-
-    private void OnDisable() {
-        OnJump -= ApplyJumpForce;
-    }
+#endregion
 
     private void GatherInput(){
         _frameInput = _inputs.FrameInput;
     }
-    
-    //Move
+
+    private void HandleSpriteFlip(){
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (mousePosition.x < transform.position.x){
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else{
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
+
+#region Movement
     private void Movement(){
         _movement.SetMoveDirection(_frameInput.Move.x);
     }
 
-    //Ground
     private bool CheckGround(){
         Collider2D isGrounded = Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0f, _groundLayer);
         return isGrounded;
@@ -83,8 +101,10 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(_groundCheckPoint.position, _groundCheckSize);
     }
+#endregion
 
-    //Jump
+#region Jump
+
     private void HandleJump(){
         if(!_frameInput.Jump){return;};
 
@@ -124,15 +144,31 @@ public class PlayerController : MonoBehaviour
             _rigidBody.AddForce(new Vector2(0, -_extraGravity * Time.deltaTime));
         }
     }
-    
-    private void HandleSpriteFlip(){
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+#endregion
 
-        if (mousePosition.x < transform.position.x){
-            transform.localScale = new Vector3(-1, 1, 1);
+#region Jetpack
+    private void Jetpack(){
+        if(!_frameInput.JetPack || _jetpackCoroutine != null) return;
+
+        OnJetPack?.Invoke();
+    }
+
+    private void StartJetpack(){
+        _jetpackTrailRenderer.emitting = true;
+        _jetpackCoroutine = StartCoroutine(JetpackRoutine());
+    }
+
+    private IEnumerator JetpackRoutine(){
+        float jetTime  = 0f;
+
+        while (jetTime < _jetpackTimer){
+            jetTime += Time.deltaTime;
+            _rigidBody.velocity = Vector2.up * _jetPackStrength;
+            yield return null;
         }
-        else{
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-    } 
+        _jetpackTrailRenderer.emitting = false;
+        _jetpackCoroutine = null;
+    }
+#endregion
+
 }

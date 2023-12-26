@@ -25,7 +25,10 @@ public class Gun : MonoBehaviour
     [SerializeField] private GameObject _muzzleFlash;
     [SerializeField] private float _muzzleFlashTime;
     private Coroutine _muzzeFlashRoutine;
+
+    [SerializeField] private Grenade _granadePrefab;
     
+#region Unity Methods
     private void Awake() {
         _animator = GetComponent<Animator>();
         _impulseSource = GetComponent<CinemachineImpulseSource>();
@@ -33,9 +36,10 @@ public class Gun : MonoBehaviour
     }
     
     private void Update(){
-        Shoot();
         RotateGun();
         AutomaticFire();
+        Shoot();
+        Grenade();       
     }
 
     private void OnEnable() {
@@ -49,7 +53,16 @@ public class Gun : MonoBehaviour
         OnShot -= FireAnimation;
         OnShot -= MuzzleFlash;
     }
+#endregion
 
+    private void RotateGun(){
+        _mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 direction = PlayerController.Instance.transform.InverseTransformPoint(_mousePos);
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.localRotation = Quaternion.Euler(0, 0, angle);
+    }
+
+#region Shot And Grenade
     //Shot and Projectile
     private void Shoot(){
         if (Input.GetMouseButton(0) && _lastFireTime >= _fireCD) {
@@ -62,13 +75,6 @@ public class Gun : MonoBehaviour
         Bullet newBullet = _bulletPool.Get();
         newBullet.Init(this, _bulletSpawnPoint.position, _mousePos);
         _lastFireTime = 0;
-    }
-
-    private void RotateGun(){
-        _mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = PlayerController.Instance.transform.InverseTransformPoint(_mousePos);
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.localRotation = Quaternion.Euler(0, 0, angle);
     }
 
     private void AutomaticFire(){
@@ -109,9 +115,20 @@ public class Gun : MonoBehaviour
         
         _muzzeFlashRoutine = StartCoroutine(MuzzleFlashRoutine());
     }
+
     private IEnumerator MuzzleFlashRoutine(){
         _muzzleFlash.SetActive(true);
         yield return new WaitForSeconds(_muzzleFlashTime);
         _muzzleFlash.SetActive(false);
     }
+
+    //Grenade
+    private void Grenade(){
+        if(!PlayerController.Instance.FrameInput.Granade) return;
+
+        Grenade newGranade = Instantiate(_granadePrefab);
+        newGranade.Init(_bulletSpawnPoint.position, _mousePos);
+    }
+#endregion
+
 }

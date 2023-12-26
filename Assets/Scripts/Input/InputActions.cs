@@ -44,6 +44,24 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jetpack"",
+                    ""type"": ""Button"",
+                    ""id"": ""d3d60333-4386-4b01-9317-63407b5ac685"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Granade"",
+                    ""type"": ""Button"",
+                    ""id"": ""7a5d38a8-2cf7-423e-98d8-cf3282df407c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +130,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54470cd0-a45f-47d8-a05f-3dfa1e7c6643"",
+                    ""path"": ""<Mouse>/backButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jetpack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bacb449c-ebf6-45ea-a491-736624665ec4"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Granade"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,6 +162,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Inputs = asset.FindActionMap("Inputs", throwIfNotFound: true);
         m_Inputs_Move = m_Inputs.FindAction("Move", throwIfNotFound: true);
         m_Inputs_Jump = m_Inputs.FindAction("Jump", throwIfNotFound: true);
+        m_Inputs_Jetpack = m_Inputs.FindAction("Jetpack", throwIfNotFound: true);
+        m_Inputs_Granade = m_Inputs.FindAction("Granade", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -185,12 +227,16 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private List<IInputsActions> m_InputsActionsCallbackInterfaces = new List<IInputsActions>();
     private readonly InputAction m_Inputs_Move;
     private readonly InputAction m_Inputs_Jump;
+    private readonly InputAction m_Inputs_Jetpack;
+    private readonly InputAction m_Inputs_Granade;
     public struct InputsActions
     {
         private @InputActions m_Wrapper;
         public InputsActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Inputs_Move;
         public InputAction @Jump => m_Wrapper.m_Inputs_Jump;
+        public InputAction @Jetpack => m_Wrapper.m_Inputs_Jetpack;
+        public InputAction @Granade => m_Wrapper.m_Inputs_Granade;
         public InputActionMap Get() { return m_Wrapper.m_Inputs; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -206,6 +252,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @Jetpack.started += instance.OnJetpack;
+            @Jetpack.performed += instance.OnJetpack;
+            @Jetpack.canceled += instance.OnJetpack;
+            @Granade.started += instance.OnGranade;
+            @Granade.performed += instance.OnGranade;
+            @Granade.canceled += instance.OnGranade;
         }
 
         private void UnregisterCallbacks(IInputsActions instance)
@@ -216,6 +268,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @Jetpack.started -= instance.OnJetpack;
+            @Jetpack.performed -= instance.OnJetpack;
+            @Jetpack.canceled -= instance.OnJetpack;
+            @Granade.started -= instance.OnGranade;
+            @Granade.performed -= instance.OnGranade;
+            @Granade.canceled -= instance.OnGranade;
         }
 
         public void RemoveCallbacks(IInputsActions instance)
@@ -237,5 +295,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnJetpack(InputAction.CallbackContext context);
+        void OnGranade(InputAction.CallbackContext context);
     }
 }
