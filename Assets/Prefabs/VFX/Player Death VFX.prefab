@@ -10,15 +10,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2860946859621347900, guid: 185369b5efccc5f488efb30417911c07, type: 3}
       propertyPath: m_Name
-      value: Base Death VFX
+      value: Player Death VFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844901155415130023, guid: 185369b5efccc5f488efb30417911c07, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844901155415130023, guid: 185369b5efccc5f488efb30417911c07, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.28627452
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844901155415130023, guid: 185369b5efccc5f488efb30417911c07, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.5686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844901155415130023, guid: 185369b5efccc5f488efb30417911c07, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.87843144
       objectReference: {fileID: 0}
     - target: {fileID: 5665187795171153789, guid: 185369b5efccc5f488efb30417911c07, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 9.4916315
       objectReference: {fileID: 0}
     - target: {fileID: 5665187795171153789, guid: 185369b5efccc5f488efb30417911c07, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2.2230613
       objectReference: {fileID: 0}
     - target: {fileID: 5665187795171153789, guid: 185369b5efccc5f488efb30417911c07, type: 3}
       propertyPath: m_LocalPosition.z

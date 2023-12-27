@@ -14,14 +14,22 @@ public class DeathHandler : MonoBehaviour
     private void SpawnDeathSplatterVFX(Health sender){
         GameObject newDeathSplatter = Instantiate(sender.DeathSplatterVFX, sender.transform.position, RandomRotation());
         SpriteRenderer spriteRenderer = newDeathSplatter.GetComponent<SpriteRenderer>();
-        spriteRenderer.color = sender.ColorChanger.DefaultColor;
-        newDeathSplatter.transform.SetParent(transform);
+        ColorChanger colorChanger = sender.GetComponent<ColorChanger>();
+
+        if(colorChanger){
+            spriteRenderer.color = colorChanger.DefaultColor;
+            newDeathSplatter.transform.SetParent(transform);
+        }
     }
 
     private void SpawnDeathParticleVFX(Health sender){
         GameObject newParticleVFX = Instantiate(sender.DeathParticleVFX, sender.transform.position, Quaternion.identity);
         ParticleSystem.MainModule particleSystem = newParticleVFX.GetComponent<ParticleSystem>().main;
-        particleSystem.startColor = sender.ColorChanger.DefaultColor;
+        ColorChanger colorChanger = sender.GetComponent<ColorChanger>();
+
+        if(colorChanger){
+            particleSystem.startColor = colorChanger.DefaultColor;
+        }
     }
 
     private Quaternion RandomRotation(){

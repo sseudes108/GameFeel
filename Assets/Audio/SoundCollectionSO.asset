@@ -19,10 +19,18 @@ MonoBehaviour:
   _splat:
   - {fileID: 11400000, guid: 8a8ad171ffd5d7e40b71a38d32bd00da, type: 2}
   - {fileID: 11400000, guid: 2f626039159c5424b8a998e7ef7ea551, type: 2}
-  _jetpack: {fileID: 11400000, guid: 457c38f9d1a23cf4e9b0062657061df4, type: 2}
-  _grenadeBeep: {fileID: 11400000, guid: 8d8931f1408628748b15f36af438454e, type: 2}
-  _grenadeShot: {fileID: 11400000, guid: c47adb6a90aa34646a668105be1402e0, type: 2}
-  _grenadeExplosion: {fileID: 11400000, guid: 296678ba0caf959458b9f8b6dec6f43f, type: 2}
+  _jetpack:
+  - {fileID: 11400000, guid: 457c38f9d1a23cf4e9b0062657061df4, type: 2}
+  _grenadeBeep:
+  - {fileID: 11400000, guid: 8d8931f1408628748b15f36af438454e, type: 2}
+  _grenadeLaunch:
+  - {fileID: 11400000, guid: c47adb6a90aa34646a668105be1402e0, type: 2}
+  _grenadeExplosion:
+  - {fileID: 11400000, guid: 296678ba0caf959458b9f8b6dec6f43f, type: 2}
+  _playerHit:
+  - {fileID: 11400000, guid: c03f4f476fc06c9459795c53ebfc905f, type: 2}
+  _megaKill:
+  - {fileID: 11400000, guid: fb945799e12f18a41af66e1ee931b4f4, type: 2}
   _fightMusic:
   - {fileID: 11400000, guid: ab3eefcd93b1fab4fbf803315a49dd49, type: 2}
   _discoMusic: {fileID: 11400000, guid: fd66d688ac0de5d4cba75245ca065834, type: 2}

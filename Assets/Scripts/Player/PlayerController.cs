@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour{
     //Gravity
     [SerializeField] private float  _extraGravity = 700f;
     [SerializeField] private float _gravityDelay = 0.2f;
+    [SerializeField] private float  _maxFallSpeedVelocity = -50f;
     private float _timeInAir;
 
     //Coyote
@@ -42,7 +43,7 @@ public class PlayerController : MonoBehaviour{
 
 #region Unity Methods
     private void Awake() {
-        if (Instance == null) { Instance = this; }
+        if (Instance == null) {Instance = this;}
 
         _rigidBody = GetComponent<Rigidbody2D>();
         _inputs = GetComponent<InputManager>();
@@ -55,6 +56,11 @@ public class PlayerController : MonoBehaviour{
     private void OnDisable() {
         OnJump -= ApplyJumpForce;
         OnJetPack -= StartJetpack;
+    }
+
+    private void OnDestroy() {
+        FadeScreen fade = FindFirstObjectByType<FadeScreen>();
+        if(fade != null){fade.FadeInAndOut();}
     }
 
     private void Update(){
@@ -142,8 +148,13 @@ public class PlayerController : MonoBehaviour{
     private void ExtraGravity(){
         if(_timeInAir > _gravityDelay){
             _rigidBody.AddForce(new Vector2(0, -_extraGravity * Time.deltaTime));
+
+            if(_rigidBody.velocity.y < _maxFallSpeedVelocity){
+                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _maxFallSpeedVelocity);
+            }
         }
     }
+
 #endregion
 
 #region Jetpack

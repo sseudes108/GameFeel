@@ -1,22 +1,26 @@
 using System;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class Health : MonoBehaviour, IDamageable
 {
     public static Action<Health> OnDeath;
 
     public GameObject DeathSplatterVFX => _deathSplatterVFX;
     public GameObject DeathParticleVFX => _deathParticleVFX;
-    public ColorChanger ColorChanger => _colorChanger;
 
     [SerializeField] private int _startingHealth = 3;
     [SerializeField] private GameObject _deathSplatterVFX;
     [SerializeField] private GameObject _deathParticleVFX;
     private int _currentHealth;
-    private  ColorChanger _colorChanger;
+
+    private Knockback _knockback;
+    private Flash _flash;
+    private Health _health;
 
     private void Awake() {
-        _colorChanger = GetComponent<ColorChanger>();
+        _flash = GetComponent<Flash>();
+        _health = GetComponent<Health>();
+        _knockback = GetComponent<Knockback>();
     }
 
     private void Start() {
@@ -34,5 +38,14 @@ public class Health : MonoBehaviour
             OnDeath?.Invoke(this);
             Destroy(gameObject);
         }
+    }
+
+    public void TakeHit(){
+       _flash.StartFlash();
+    }
+
+    public void TakeDamage(Vector2 damageSourceDir, int damageAmount, float knockbackThrust){
+        _health.TakeDamage(damageAmount);
+        _knockback.GetKnockedBack(damageSourceDir, knockbackThrust);
     }
 }

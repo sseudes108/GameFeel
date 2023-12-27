@@ -13,8 +13,9 @@ public class Gun : MonoBehaviour
     private Animator _animator;
     private static readonly int FIRE = Animator.StringToHash("Fire");
     private CinemachineImpulseSource _impulseSource;
-
     private ObjectPool<Bullet> _bulletPool;
+    
+    [Header("Bullet")]
     [SerializeField] private Transform _bulletPoolManagerTransform;
     [SerializeField] private Transform _bulletSpawnPoint;
     [SerializeField] private Bullet _bulletPrefab;
@@ -22,11 +23,15 @@ public class Gun : MonoBehaviour
     private float _lastFireTime;
     private Vector2 _mousePos;
 
+    [Header("Muzzle Flash")]
     [SerializeField] private GameObject _muzzleFlash;
     [SerializeField] private float _muzzleFlashTime;
     private Coroutine _muzzeFlashRoutine;
 
-    [SerializeField] private Grenade _granadePrefab;
+    [Header("Grenade")]
+    [SerializeField] private Grenade _grenadePrefab;
+    [SerializeField] private float _grenadeCD;
+    private float _grenadeCDTimer;
     
 #region Unity Methods
     private void Awake() {
@@ -39,19 +44,26 @@ public class Gun : MonoBehaviour
         RotateGun();
         AutomaticFire();
         Shoot();
-        Grenade();       
+        GrenadeLauncher(); 
+        GrenadeCoolDown();      
     }
 
     private void OnEnable() {
         OnShot += ShootProjectile;
         OnShot += FireAnimation;
         OnShot += MuzzleFlash;
+
+        Grenade.OnGrenadeLaunch += ShootGrenade;
+        Grenade.OnGrenadeLaunch += FireAnimation;
     }
 
     private void OnDisable() {
         OnShot -= ShootProjectile;
         OnShot -= FireAnimation;
         OnShot -= MuzzleFlash;
+
+        Grenade.OnGrenadeLaunch -= ShootGrenade;
+        Grenade.OnGrenadeLaunch -= FireAnimation;
     }
 #endregion
 
@@ -65,7 +77,7 @@ public class Gun : MonoBehaviour
 #region Shot And Grenade
     //Shot and Projectile
     private void Shoot(){
-        if (Input.GetMouseButton(0) && _lastFireTime >= _fireCD) {
+        if (PlayerController.Instance.FrameInput.Shot && _lastFireTime >= _fireCD) {
             OnShot?.Invoke();
         }
     }
@@ -79,6 +91,14 @@ public class Gun : MonoBehaviour
 
     private void AutomaticFire(){
         _lastFireTime += Time.deltaTime;
+    }
+
+    private void GrenadeCoolDown(){
+        if(_grenadeCDTimer > 0){
+            _grenadeCDTimer -= Time.deltaTime;
+        }else{
+            _grenadeCDTimer = 0;
+        }
     }
 
     private void FireAnimation(){
@@ -123,11 +143,15 @@ public class Gun : MonoBehaviour
     }
 
     //Grenade
-    private void Grenade(){
-        if(!PlayerController.Instance.FrameInput.Granade) return;
+    private void GrenadeLauncher(){
+        if(!PlayerController.Instance.FrameInput.Granade || _grenadeCDTimer != 0) return;
+        Grenade.OnGrenadeLaunch?.Invoke();
+    }
 
-        Grenade newGranade = Instantiate(_granadePrefab);
+    private void ShootGrenade(){
+        Grenade newGranade = Instantiate(_grenadePrefab);
         newGranade.Init(_bulletSpawnPoint.position, _mousePos);
+        _grenadeCDTimer = _grenadeCD;
     }
 #endregion
 

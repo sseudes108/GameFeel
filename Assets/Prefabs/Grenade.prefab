@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1204562566433131309}
   - component: {fileID: 6983364964975427411}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 2523133732219163448}
   - component: {fileID: 2875044224374897010}
   - component: {fileID: 7943238252665392180}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Grenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,7 +196,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!58 &2523133732219163448
 CircleCollider2D:
@@ -246,6 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _launchForce: 20
+  _torqueAmount: 0.3
   _grenadeDamage: 3
   _explosionRange: 3
   _explosionVFX: {fileID: 7847162414993258717, guid: 4e78943b7c2a18140b400d5897a83e2c, type: 3}

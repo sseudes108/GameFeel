@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public bool CanMove => _canMove;
+
     private Rigidbody2D _rigidbody;
     private Knockback _knockback;
     private float _moveX;
